@@ -2,15 +2,16 @@ import { Controller, Delete, Get, Post, Put, Req, Res, UseGuards } from '@nestjs
 import { Request, Response } from 'express';
 import { TodoService } from './todo.service';
 import { authMiddleware } from 'src/authMiddleware';
+import { CustomRequest } from '../types/expressRequest.interface';
 @UseGuards(authMiddleware)
 @Controller('todos')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Get()
- async getAllTodos(@Req() req: Request, @Res() res: Response) {
+ async getAllTodos(@Req() req: CustomRequest, @Res() res: Response) {
     let todos = await this.todoService.getAllTodos();
-    res.status(200).json({ status: 'success', data: todos });
+    res.status(200).json({ status: 'success', data: todos,user:req.user });
   }
 
   @Post('create')
