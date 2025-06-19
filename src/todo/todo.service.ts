@@ -2,11 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Todos } from './entityTodos';
 import { Model } from 'mongoose';
+import { PaginateModel } from 'mongoose'; 
 @Injectable()
 export class TodoService {
-  constructor(@InjectModel(Todos.name) private todosModel: Model<Todos>) {}
+  constructor(@InjectModel(Todos.name) private todosModel: PaginateModel<Todos>) {}
   async getAllTodos() {
-    let Alltodos = await this.todosModel.find({});
+    const options = {
+      page: 1,
+      limit: 10,
+      sort: { createdAt: -1 } 
+    }
+    let Alltodos = await this.todosModel.paginate({},options);
     return Alltodos;
   }
 
